@@ -31,35 +31,19 @@ public class SuggestionService {
     }
 
     public List<CitySuggestion> getSuggestions(String query, Double latitude, Double longitude) {
-        // List<City> filteredCities = cities.stream()
-        // .filter(city -> city.getName().toLowerCase().contains(query.toLowerCase()))
-        // .collect(Collectors.toList());
-        // for (City city : filteredCities) {
-        // System.out.println(
-        // this.scoreCalculator.calculateLocationScore(city.getLatitude(),
-        // city.getLongitude(), latitude,
-        // longitude));
-        // }
-        // List<CitySuggestion> suggestionsWithScores = filteredCities.stream()
-        // .map(city -> new CitySuggestion(city.getName(), city.getLatitude(),
-        // city.getLongitude(),
-        // this.scoreCalculator.calculateLocationScore(city.getLatitude(),
-        // city.getLongitude(), latitude,
-        // longitude)))
-        // .collect(Collectors.toList());
-
-        // return suggestionsWithScores.stream()
-        // .filter(suggestion -> suggestion.getScore() > 0)
-        // .sorted(Comparator.comparingDouble(CitySuggestion::getScore).reversed())
-        // .collect(Collectors.toList());
 
         return cities.stream()
                 .filter(city -> city.getName().toLowerCase().contains(query.toLowerCase()))
-                .map(city -> new CitySuggestion(city.getName(), city.getLatitude(),
-                        city.getLongitude(),
-                        this.scoreCalculator.calculateLocationScore(city.getLatitude(),
-                                city.getLongitude(), latitude,
-                                longitude)))
+                .map(city -> {
+                    Double score = 0.0;
+                    if (latitude != null && longitude != null) {
+                        score = this.scoreCalculator.calculateLocationScore(city.getLatitude(), city.getLongitude(),
+                                latitude, longitude);
+                    }
+
+                    return new CitySuggestion(city.getName(), city.getLatitude(),
+                            city.getLongitude(), score);
+                })
                 .filter(suggestion -> suggestion.getScore() >= 0)
                 .sorted(Comparator.comparingDouble(CitySuggestion::getScore).reversed())
                 .limit(10)
