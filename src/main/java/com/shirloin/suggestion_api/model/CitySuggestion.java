@@ -1,6 +1,8 @@
 package com.shirloin.suggestion_api.model;
 
-public class CitySuggestion extends City {
+import java.io.Serializable;
+
+public class CitySuggestion extends City implements Serializable {
     private Double score;
 
     public CitySuggestion(String name, Double latitude, Double longitude, Double score) {
