@@ -35,4 +35,5 @@ public class City {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
 }
