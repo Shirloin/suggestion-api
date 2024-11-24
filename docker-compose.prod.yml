@@ -6,7 +6,7 @@ services:
     ports:
       - "6379:6379"
   app:
-    image: riccardo/suggestion-api:latest
+    image: riccardo006/suggestion-api:latest
     container_name: suggestion-api
     links:
       - redis-server
