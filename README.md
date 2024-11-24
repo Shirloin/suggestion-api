@@ -35,7 +35,10 @@ This response will be a JSON array of suggestions, each sorted by confidence sco
 
 [API Demo](https://codexchange.my.id/suggestions?q=Londo&latitude=43.70011&longitude=-79.4163)
 
-### Freatures of the project
+This project is deployed on an AWS EC2 instance.
+
+### Features of the project
+- Scoring Algorithm: The scoring algorithm uses the Levenshtein distance to measure the similarity between the query string and the city name, and the Haversine formula to calculate the distance between two geographical positions.
 - Redis Caching: Utilizes Redis to cache frequently accessed data, enhancing performance by reducing the need for repeated calculating score, filtering, and sorting.
 - Containeriztion: The project is containerized with Docker, making it easy to deploy and scale accross various environments.
 - CI/CD Pipeline: Integrates a Continuous Integration/Continuous Deployment (CI/CD) pipeline to automate testing, building, and deployment. This ensures that all code changes are validated and delivered efficiently.
