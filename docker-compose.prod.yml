@@ -17,7 +17,7 @@ services:
     environment:
       SPRING_REDIS_HOST: redis
     depends_on:
-      - redis
+      - redis-server
     networks:
       - suggestion-api-network
 
