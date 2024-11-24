@@ -27,10 +27,13 @@ jobs:
           tags: ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
       
       - name: Deploy
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
-          REMOTE-USER: ubuntu
-          SERVER-IP: ${{secrets.SERVER_IP}}
-          REMOTE-PATH: /home/ubuntu/suggestion-api
-          LOCAL-PATH: ./
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SERVER_IP}}
+          username: ubuntu
+          key: ${{secrets.EC2_SSH_KEY}}
+          script: |
+            cd suggestion-api
+             curl -o docker-compose.yml https://raw.githubusercontent.com/shirloin/suggestion-api/main/docker-compose.yml
+             docker pull ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
+             docker compose up -d
