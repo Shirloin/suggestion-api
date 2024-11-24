@@ -36,4 +36,4 @@ jobs:
             cd suggestion-api
             curl -o docker-compose.prod.yml https://raw.githubusercontent.com/shirloin/suggestion-api/main/docker-compose.prod.yml
             docker pull ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
-            docker-compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d
