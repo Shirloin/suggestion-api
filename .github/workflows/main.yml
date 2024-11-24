@@ -34,6 +34,6 @@ jobs:
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
             cd suggestion-api
-             curl -o docker-compose.yml https://raw.githubusercontent.com/shirloin/suggestion-api/main/docker-compose.yml
-             docker pull ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
-             docker compose up -d
+            curl -o docker-compose.yml https://raw.githubusercontent.com/shirloin/suggestion-api/main/docker-compose.yml
+            docker pull ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
+            docker compose up -d
