@@ -35,7 +35,7 @@ public class SuggestionService {
     public List<CitySuggestion> getSuggestions(String query, Double latitude, Double longitude) {
 
         return cities.stream()
-                .filter(city -> city.getName().toLowerCase().contains(query.toLowerCase()))
+                .filter(city -> city.getName().toLowerCase().startsWith(query.toLowerCase()))
                 .map(city -> {
                     Double score = 0.0;
                     if (latitude != null && longitude != null) {
