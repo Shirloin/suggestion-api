@@ -31,14 +31,10 @@ public class DataLoader {
                 String name = col[1];
                 Double latitude = Double.parseDouble(col[4]);
                 Double longitude = Double.parseDouble(col[5]);
-                // System.out.println("Name: " + name);
-                // System.out.println("Latitude: " + latitude);
-                // System.out.println("Longitude: " + longitude);
-                // System.out.println("");
-
                 City city = new City(name, latitude, longitude);
                 cities.add(city);
             }
+            System.out.println("Read File Done");
         } catch (Exception e) {
             e.printStackTrace();
         }

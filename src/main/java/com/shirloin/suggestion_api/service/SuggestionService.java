@@ -46,7 +46,6 @@ public class SuggestionService {
                     return new CitySuggestion(city.getName(), city.getLatitude(),
                             city.getLongitude(), score);
                 })
-                .filter(suggestion -> suggestion.getScore() >= 0)
                 .sorted(Comparator.comparingDouble(CitySuggestion::getScore).reversed())
                 .limit(10)
                 .collect(Collectors.toList());
