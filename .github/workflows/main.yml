@@ -33,7 +33,6 @@ jobs:
           username: ubuntu
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
-            mkdir suggestion-api
             cd suggestion-api
             curl -o docker-compose.yml https://raw.githubusercontent.com/shirloin/suggestion-api/main/docker-compose.yml
             docker pull ${{secrets.DOCKERHUB_USERNAME}}/suggestion-api:latest
