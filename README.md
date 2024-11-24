@@ -1,90 +1,127 @@
-# Coding Challenge
+## Documentation
 
-## Requirements
 
-Design a REST API endpoint that provides auto-complete suggestions for large cities.
+## API Reference
 
-- The endpoint is exposed at `/suggestions`
-- The partial (or complete) search term is passed as a querystring parameter `q`
-- The caller's location can optionally be supplied via querystring parameters `latitude` and `longitude` to help improve relative scores
-- The endpoint returns a JSON response with an array of scored suggested matches
-    - The suggestions are sorted by descending score
-    - Each suggestion has a score between 0 and 1 (inclusive) indicating confidence in the suggestion (1 is most confident)
-    - Each suggestion has a name which can be used to disambiguate between similarly named locations
-    - Each suggestion has a latitude and longitude
+#### Get Suggestions
+The /suggestions endpoint provides auto-complete suggestions for large cities based on a search term. It returns a list of cities that match the given search query, optionally factoring in the caller's location to improve relevance. Each suggestion includes a confidence score, a city name, and geographical coordinates.
 
-## "The rules"
 
-- ~~*You can use the language and technology of your choosing.*~~ *Please use Java and Spring Framework to build the REST API.* It's OK to try something new (tell us if you do), but feel free to use something you're comfortable with. We don't care if you use something we don't; the goal here is not to validate your knowledge of a particular technology.
-- End result should be deployed on a public Cloud (Heroku, AWS etc. all have free tiers you can use).
-- If you can't deploy the end product, please push your project to public repository and you can share the repository via email.
+```http
+GET /suggestions?q=Londo&latitude=43.70011&longitude=-79.4163
+```
 
-## Advice
 
-- **Try to design and implement your solution as you would do for real production code**. Show us how you create clean, maintainable code that does awesome stuff. Build something that we'd be happy to contribute to. This is not a programming contest where dirty hacks win the game.
-- Documentation and maintainability are a plus, and don't you forget those unit tests.
-- We don’t want to know if you can do exactly as asked (or everybody would have the same result). We want to know what **you** bring to the table when working on a project, what is your secret sauce. More features? Best solution? Thinking outside the box?
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `q`      | `String` | **Required**|
+| `latitude`      | `Double` | **Optional**|
+| `longitude`      | `Double` | **Optional**|
 
-## Can I use a database?
+#### Responses
+This response will be a JSON array of suggestions, each sorted by confidence score in descending order. Each suggestion will contain the following fields:
 
-If you wish, it's OK to use external systems such as a database, an Elastic index, etc. in your solution. But this is certainly not required to complete the basic requirements of the challenge. Keep in mind that **our goal here is to see some code of yours**; if you only implement a thin API on top of a DB we won't have much to look at.
-
-Our advice is that if you choose to use an external search system, you had better be doing something really truly awesome with it.
-
-## Sample responses
-
-These responses are meant to provide guidance. The exact values can vary based on the data source and scoring algorithm
-
-**Near match**
-
-    GET /suggestions?q=Londo&latitude=43.70011&longitude=-79.4163
-
-```json
+```http
 {
-  "suggestions": [
-    {
-      "name": "London, ON, Canada",
-      "latitude": "42.98339",
-      "longitude": "-81.23304",
-      "score": 0.9
-    },
-    {
-      "name": "London, OH, USA",
-      "latitude": "39.88645",
-      "longitude": "-83.44825",
-      "score": 0.5
-    },
-    {
-      "name": "London, KY, USA",
-      "latitude": "37.12898",
-      "longitude": "-84.08326",
-      "score": 0.5
-    },
-    {
-      "name": "Londontowne, MD, USA",
-      "latitude": "38.93345",
-      "longitude": "-76.54941",
-      "score": 0.3
-    }
-  ]
+  "name": string,
+  "latitude": double,
+  "longitude": double,
+  "score": double 
 }
 ```
 
-**No match**
 
-    GET /suggestions?q=SomeRandomCityInTheMiddleOfNowhere
+## Demo
 
-```json
-{
-  "suggestions": []
-}
+[API Demo](https://codexchange.my.id/suggestions?q=Londo&latitude=43.70011&longitude=-79.4163)
+
+### Freatures of the project
+- Redis Caching: Utilizes Redis to cache frequently accessed data, enhancing performance by reducing the need for repeated calculating score, filtering, and sorting.
+- Containeriztion: The project is containerized with Docker, making it easy to deploy and scale accross various environments.
+- CI/CD Pipeline: Integrates a Continuous Integration/Continuous Deployment (CI/CD) pipeline to automate testing, building, and deployment. This ensures that all code changes are validated and delivered efficiently.
+## How to run
+Before running this project, please ensure you have the following dependencies installed:
+
+#### Prequisites
+- Java 17
+- Redis
+- Docker
+- Docker Compose
+
+### Steps to run the project manually
+- Clone the repository
+```
+git clone https://github.com/shirloin/suggestion-api
 ```
 
-## References
+- Navigate to the project directory
+```
+cd <project-directory>
+```
 
-- Geonames provides city lists Canada and the USA http://download.geonames.org/export/dump/readme.txt
+- Build the project
+``` 
+mvn spring-boot:run
+```
 
-## Getting Started
+- Start Redis
+On Linux. You need to install redis in linux before start it.
+```
+sudo systemctl start redis-server
+```
 
-Begin by forking this repo and cloning your fork. GitHub has apps for [Mac](http://mac.github.com/) and
-[Windows](http://windows.github.com/) that make this easier.
+- Access the application
+Once the application is running, you can access it in you browser or thrugh API clients like Potman at http://localhost:8080
+
+### Steps to run the project using docker
+- Clone the repository
+```
+git clone https://github.com/shirloin/suggestion-api
+```
+
+- Navigate to the project directory
+```
+cd <project-directory>
+```
+
+- Build and run the docker container
+```
+docker compose up -d --build
+```
+
+### Unit Testing
+This project includes a test suite for the SuggestionController endpoint using JUnit 5, Spring Boot Test, and MockMvc. The unit tests are designed to verify the behaviour of the /suggestions endpoint, which provides city suggestions based on partial search terms, with optional geographical parameters(latitude and longitude).
+
+#### Dependencies
+The necessary dependencies are already included in the pom.xml file:
+```
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <version>3.1.2</version>
+  <scope>test</scope>
+</dependency>
+```
+
+#### Test Case: ```testGetSuggestion```
+
+The testGetSuggestions() test case verifies that the /suggestions endpoint works as expected. It:
+
+    1. Send a GET request to /suggestions with a query parameter q (search term) and optional latitude and longitude parameters.
+    2. Compares the returned response with the expected list of city suggestions based on the query term.
+    3. Asserts the response for each city suggestion by checking the name, latitude, longitude and score fields.
+
+#### Test Assertions:
+- Status: The http status code should be 200 Ok.
+- Response Body: The response body should contain a list of city suggestions, each containing the following fields:
+      
+      1. name: The name of the city.
+      2. latitude: The latitude of the city.
+      3. longitude: The longitude of the city.
+      4. score: The score indicating the confidence of the match (from 0 to 1)
+
+#### Test Execution:
+To run the tests, use the following Maven command:
+```
+mvn test
+```
