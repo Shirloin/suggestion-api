@@ -5,6 +5,8 @@ services:
     image: 'redis'
     ports:
       - "6379:6379"
+    networks:
+      - suggestion-api-network
   app:
     image: riccardo006/suggestion-api:latest
     container_name: suggestion-api
@@ -12,3 +14,13 @@ services:
       - redis-server
     ports:
       - "80:8080"
+    environment:
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      - redis
+    networks:
+      - suggestion-api-network
+
+networks:
+  suggestion-api-network:
+    driver: bridge
