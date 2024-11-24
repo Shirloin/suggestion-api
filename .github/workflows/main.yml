@@ -1,0 +1,7 @@
+name: suggestion-api-cicd
+
+on:
+  push:
+    branches:
+      - "main"
+jobs:
