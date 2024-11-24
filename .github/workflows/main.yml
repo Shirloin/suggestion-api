@@ -8,6 +8,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:latest
+        options: --health-cmd="redis-server --test-memory" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 6379:6379
     steps:
       - name: Checkout to repository
         uses: actions/checkout@v3
